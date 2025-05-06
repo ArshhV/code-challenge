@@ -120,7 +120,7 @@ const AccountsPage: React.FC = () => {
       ) : (
         <Box sx={{ maxWidth: "600px", mx: "auto" }}>
           {filteredAccounts.map(account => (
-            <Box key={account.id} mb={3}>
+            <Box key={account.id} marginBottom={3}>
               <AccountCard account={account} />
             </Box>
           ))}

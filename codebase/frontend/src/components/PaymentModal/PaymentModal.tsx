@@ -189,7 +189,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ open, onClose, account }) =
     >
       {isSuccess ? (
         // Success view
-        <Box sx={{ p: 3, textAlign: 'center' }}>
+        <Box sx={{ padding: 3, textAlign: 'center' }}>
           <IconButton 
             aria-label="close" 
             onClick={handleClose}
@@ -198,15 +198,15 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ open, onClose, account }) =
             <CloseIcon />
           </IconButton>
           
-          <Box sx={{ mt: 3, mb: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <CheckCircleOutlineIcon color="success" sx={{ fontSize: 60, mb: 2 }} />
+          <Box sx={{ marginTop: 3, marginBottom: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <CheckCircleOutlineIcon color="success" sx={{ fontSize: 60, marginBottom: 2 }} />
             <Typography variant="h5" component="h2" gutterBottom>
               Payment Successful
             </Typography>
             <Typography variant="body1" color="text.secondary">
               Your payment of ${amount.toFixed(2)} has been processed successfully.
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            <Typography variant="body2" color="text.secondary" sx={{ marginTop: 1 }}>
               A confirmation will be sent to your email.
             </Typography>
           </Box>
@@ -236,12 +236,12 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ open, onClose, account }) =
           
           <DialogContent ref={dialogContentRef} dividers>
             {apiError && (
-              <Alert severity="error" sx={{ mb: 2 }}>
+              <Alert severity="error" sx={{ marginBottom: 2 }}>
                 {apiError}
               </Alert>
             )}
             
-            <Paper elevation={0} sx={{ p: 2, mb: 3, bgcolor: 'background.default' }}>
+            <Paper elevation={0} sx={{ padding: 2, marginBottom: 3, bgcolor: 'background.default' }}>
               <Typography variant="subtitle1" gutterBottom>
                 Account: {account?.id}
               </Typography>
@@ -267,7 +267,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ open, onClose, account }) =
                 }}
               />
               
-              <Typography variant="h6" sx={{ mt: 3, mb: 1 }}>
+              <Typography variant="h6" sx={{ marginTop: 3, marginBottom: 1 }}>
                 Card Details
               </Typography>
               
@@ -329,7 +329,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ open, onClose, account }) =
             </form>
           </DialogContent>
           
-          <DialogActions sx={{ p: 2, justifyContent: 'space-between' }}>
+          <DialogActions sx={{ padding: 2, justifyContent: 'space-between' }}>
             <Button onClick={handleClose} disabled={isSubmitting}>
               Cancel
             </Button>

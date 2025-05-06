@@ -44,11 +44,11 @@ describe('PaymentModal Component', () => {
     expect(screen.getByText('Make a Payment')).toBeInTheDocument();
     expect(screen.getByText(`Account: ${mockAccount.id}`)).toBeInTheDocument();
     expect(screen.getByText(`Balance: $${mockAccount.balance.toFixed(2)}`)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Payment Amount/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Card Number/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Cardholder Name/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Expiry Date/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/CVV/i)).toBeInTheDocument();
+    expect(screen.getByLabelText("Payment Amount")).toBeInTheDocument();
+    expect(screen.getByLabelText("Card Number")).toBeInTheDocument();
+    expect(screen.getByLabelText("Cardholder Name")).toBeInTheDocument();
+    expect(screen.getByLabelText("Expiry Date")).toBeInTheDocument();
+    expect(screen.getByLabelText("CVV")).toBeInTheDocument();
     expect(screen.getByText(`Pay $${mockAccount.balance.toFixed(2)}`)).toBeInTheDocument();
   });
 
@@ -89,7 +89,7 @@ describe('PaymentModal Component', () => {
     );
     
     // Clear amount field
-    const amountInput = screen.getByLabelText(/Payment Amount/i);
+    const amountInput = screen.getByLabelText("Payment Amount");
     fireEvent.change(amountInput, { target: { value: '0' } });
     
     // Submit the form with empty/invalid fields
@@ -131,19 +131,19 @@ describe('PaymentModal Component', () => {
     );
     
     // Fill in form fields with valid data
-    fireEvent.change(screen.getByLabelText(/Card Number/i), { 
+    fireEvent.change(screen.getByLabelText("Card Number"), { 
       target: { value: '4111111111111111' } 
     });
     
-    fireEvent.change(screen.getByLabelText(/Cardholder Name/i), { 
+    fireEvent.change(screen.getByLabelText("Cardholder Name"), { 
       target: { value: 'John Doe' } 
     });
     
-    fireEvent.change(screen.getByLabelText(/Expiry Date/i), { 
+    fireEvent.change(screen.getByLabelText("Expiry Date"), { 
       target: { value: '12/30' } 
     });
     
-    fireEvent.change(screen.getByLabelText(/CVV/i), { 
+    fireEvent.change(screen.getByLabelText("CVV"), { 
       target: { value: '123' } 
     });
     
@@ -182,19 +182,19 @@ describe('PaymentModal Component', () => {
     );
     
     // Fill in form fields with valid data
-    fireEvent.change(screen.getByLabelText(/Card Number/i), { 
+    fireEvent.change(screen.getByLabelText("Card Number"), { 
       target: { value: '4111111111111111' } 
     });
     
-    fireEvent.change(screen.getByLabelText(/Cardholder Name/i), { 
+    fireEvent.change(screen.getByLabelText("Cardholder Name"), { 
       target: { value: 'John Doe' } 
     });
     
-    fireEvent.change(screen.getByLabelText(/Expiry Date/i), { 
+    fireEvent.change(screen.getByLabelText("Expiry Date"), { 
       target: { value: '12/30' } 
     });
     
-    fireEvent.change(screen.getByLabelText(/CVV/i), { 
+    fireEvent.change(screen.getByLabelText("CVV"), { 
       target: { value: '123' } 
     });
     
@@ -218,7 +218,7 @@ describe('PaymentModal Component', () => {
       />
     );
     
-    const amountInput = screen.getByLabelText(/Payment Amount/i);
+    const amountInput = screen.getByLabelText("Payment Amount");
     fireEvent.change(amountInput, { target: { value: '75.50' } });
     
     const payButton = screen.getByText('Pay $75.50');
@@ -235,20 +235,20 @@ describe('PaymentModal Component', () => {
     );
     
     // Fill in all required fields
-    fireEvent.change(screen.getByLabelText(/Card Number/i), { 
+    fireEvent.change(screen.getByLabelText("Card Number"), { 
       target: { value: '4111111111111111' } 
     });
     
-    fireEvent.change(screen.getByLabelText(/Cardholder Name/i), { 
+    fireEvent.change(screen.getByLabelText("Cardholder Name"), { 
       target: { value: 'John Doe' } 
     });
     
     // Enter invalid expiry date format
-    fireEvent.change(screen.getByLabelText(/Expiry Date/i), { 
+    fireEvent.change(screen.getByLabelText("Expiry Date"), { 
       target: { value: '1230' } // Invalid format (should be MM/YY)
     });
     
-    fireEvent.change(screen.getByLabelText(/CVV/i), { 
+    fireEvent.change(screen.getByLabelText("CVV"), { 
       target: { value: '123' } 
     });
     
@@ -260,5 +260,213 @@ describe('PaymentModal Component', () => {
     await waitFor(() => {
       expect(screen.getByText(/Invalid format \(use MM\/YY\)/i)).toBeInTheDocument();
     });
+  });
+
+  it('validates expired card and shows appropriate error', async () => {
+    // Mock current date to be 2025-05-06 (from context)
+    const realDate = Date;
+    global.Date = class extends Date {
+      constructor(date?: string | number | Date) {
+        if (date) {
+          super(date);
+        } else {
+          super('2025-05-06');
+        }
+      }
+    } as any;
+
+    render(
+      <PaymentModal 
+        open={true} 
+        onClose={mockOnClose} 
+        account={mockAccount} 
+      />
+    );
+    
+    // Fill form with all fields valid except expiry date
+    fireEvent.change(screen.getByLabelText("Card Number"), { 
+      target: { value: '4111111111111111' } 
+    });
+    
+    fireEvent.change(screen.getByLabelText("Cardholder Name"), { 
+      target: { value: 'John Doe' } 
+    });
+    
+    // Enter expired date (before current date)
+    fireEvent.change(screen.getByLabelText("Expiry Date"), { 
+      target: { value: '01/25' } // Expired (May 2025 is current date)
+    });
+    
+    fireEvent.change(screen.getByLabelText("CVV"), { 
+      target: { value: '123' } 
+    });
+    
+    // Submit the form
+    const payButton = screen.getByText(`Pay $${mockAccount.balance.toFixed(2)}`);
+    fireEvent.click(payButton);
+    
+    // Check for expired card error
+    await waitFor(() => {
+      expect(screen.getByText(/Card has expired/i)).toBeInTheDocument();
+    });
+
+    // Restore original Date implementation
+    global.Date = realDate;
+  });
+
+  it('validates card number format correctly', async () => {
+    render(
+      <PaymentModal 
+        open={true} 
+        onClose={mockOnClose} 
+        account={mockAccount} 
+      />
+    );
+    
+    // Fill form with invalid card number
+    fireEvent.change(screen.getByLabelText("Card Number"), { 
+      target: { value: '411111' } // Too short
+    });
+    
+    fireEvent.change(screen.getByLabelText("Cardholder Name"), { 
+      target: { value: 'John Doe' } 
+    });
+    
+    fireEvent.change(screen.getByLabelText("Expiry Date"), { 
+      target: { value: '12/30' } 
+    });
+    
+    fireEvent.change(screen.getByLabelText("CVV"), { 
+      target: { value: '123' } 
+    });
+    
+    // Submit the form
+    const payButton = screen.getByText(`Pay $${mockAccount.balance.toFixed(2)}`);
+    fireEvent.click(payButton);
+    
+    // Check for invalid card format error
+    await waitFor(() => {
+      expect(screen.getByText(/Invalid card number format/i)).toBeInTheDocument();
+    });
+  });
+
+  it('clears field error when user types in that field', async () => {
+    render(
+      <PaymentModal 
+        open={true} 
+        onClose={mockOnClose} 
+        account={mockAccount} 
+      />
+    );
+    
+    // Trigger validation errors
+    const payButton = screen.getByText(`Pay $${mockAccount.balance.toFixed(2)}`);
+    fireEvent.click(payButton);
+    
+    // Verify error appears
+    await waitFor(() => {
+      expect(screen.getByText(/Card number is required/i)).toBeInTheDocument();
+    });
+    
+    // Type in the field with error
+    fireEvent.change(screen.getByLabelText("Card Number"), { 
+      target: { value: '4111111111111111' } 
+    });
+    
+    // Error should be cleared
+    await waitFor(() => {
+      expect(screen.queryByText(/Card number is required/i)).not.toBeInTheDocument();
+    });
+  });
+
+  it('tests close button in success view works correctly', async () => {
+    // Mock successful payment
+    (api.makePayment as jest.Mock).mockResolvedValueOnce({});
+    
+    render(
+      <PaymentModal 
+        open={true} 
+        onClose={mockOnClose} 
+        account={mockAccount} 
+      />
+    );
+    
+    // Fill in form fields with valid data and submit
+    fireEvent.change(screen.getByLabelText("Card Number"), { target: { value: '4111111111111111' } });
+    fireEvent.change(screen.getByLabelText("Cardholder Name"), { target: { value: 'John Doe' } });
+    fireEvent.change(screen.getByLabelText("Expiry Date"), { target: { value: '12/30' } });
+    fireEvent.change(screen.getByLabelText("CVV"), { target: { value: '123' } });
+    
+    const payButton = screen.getByText(`Pay $${mockAccount.balance.toFixed(2)}`);
+    fireEvent.click(payButton);
+    
+    // Wait for success view to appear
+    await screen.findByText('Payment Successful');
+    
+    // Use getAllByText to get all buttons with text "Close" and select the one that doesn't have aria-label="close"
+    const closeButtons = screen.getAllByText('Close');
+    // Find the button that is the main close button, not the X icon (which has no text content)
+    const mainCloseButton = closeButtons[0];
+    fireEvent.click(mainCloseButton);
+    
+    // Check if onClose was called
+    expect(mockOnClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('calls onClose when clicking the X button in header', () => {
+    render(
+      <PaymentModal 
+        open={true} 
+        onClose={mockOnClose} 
+        account={mockAccount} 
+      />
+    );
+    
+    // Find the close icon button in the header (aria-label="close")
+    const closeIconButton = screen.getByLabelText('close');
+    fireEvent.click(closeIconButton);
+    
+    expect(mockOnClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('resets state when modal reopens with a new account', () => {
+    const { rerender } = render(
+      <PaymentModal 
+        open={true} 
+        onClose={mockOnClose} 
+        account={mockAccount} 
+      />
+    );
+    
+    // Change amount
+    const amountInput = screen.getByLabelText("Payment Amount");
+    fireEvent.change(amountInput, { target: { value: '50' } });
+    
+    // Verify amount changed
+    expect(screen.getByText('Pay $50.00')).toBeInTheDocument();
+    
+    // New account with different balance
+    const newAccount = { ...mockAccount, id: 'A-5678', balance: 200 };
+    
+    // Close and reopen with new account
+    rerender(
+      <PaymentModal 
+        open={false} 
+        onClose={mockOnClose} 
+        account={mockAccount} 
+      />
+    );
+    
+    rerender(
+      <PaymentModal 
+        open={true} 
+        onClose={mockOnClose} 
+        account={newAccount} 
+      />
+    );
+    
+    // Check if amount was reset to new account's balance
+    expect(screen.getByText(`Pay $${newAccount.balance.toFixed(2)}`)).toBeInTheDocument();
+    expect(screen.getByText(`Account: ${newAccount.id}`)).toBeInTheDocument();
   });
 });

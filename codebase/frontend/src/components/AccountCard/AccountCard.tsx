@@ -32,12 +32,12 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
     <Card variant="outlined" sx={{ width: '100%', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
       <CardContent sx={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
         <Box display="flex" flexDirection="column">
-          <Box display="flex" alignItems="center" mb={1}>
+          <Box display="flex" alignItems="center" marginBottom={1}>
             <Chip 
               icon={account.type === 'ELECTRICITY' ? <ElectricBoltIcon /> : <LocalFireDepartmentIcon />}
               label={account.type}
               sx={{ 
-                mr: 1,
+                marginRight: 1,
                 bgcolor: account.type === 'ELECTRICITY' ? '#0078d4' : '#44b349', // Lighter blue for electricity, Green for gas
                 color: 'white',
                 '& .MuiChip-icon': {
@@ -50,17 +50,17 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
               ID: {account.id}
             </Typography>
           </Box>
-          <Typography variant="h6" component="div" mb={1} align="center">
+          <Typography variant="h6" component="div" marginBottom={1} align="center">
             {account.firstName} {account.lastName}
           </Typography>
-          <Typography color="text.secondary" mb={2} align="center">
+          <Typography color="text.secondary" marginBottom={2} align="center">
             {account.address}
           </Typography>
           
           <Divider />
         </Box>
         
-        <Box display="flex" alignItems="center" justifyContent="center" py={4}>
+        <Box display="flex" alignItems="center" justifyContent="center" paddingTop={4} paddingBottom={4}>
           <Typography variant="subtitle1" component="div">
             Balance:
           </Typography>
@@ -68,7 +68,7 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
             variant="h6" 
             component="div" 
             color={getBalanceColor(account.balance || 0)}
-            sx={{ ml: 1, fontWeight: 'bold' }}
+            sx={{ marginLeft: 1, fontWeight: 'bold' }}
           >
             ${(account.balance || 0).toFixed(2)}
           </Typography>

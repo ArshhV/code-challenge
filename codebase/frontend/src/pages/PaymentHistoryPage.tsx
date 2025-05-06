@@ -138,7 +138,7 @@ const PaymentHistoryPage: React.FC = () => {
   // Display error state
   if (error) {
     return (
-      <Box mt={4}>
+      <Box marginTop={4}>
         <Alert severity="error">{error}</Alert>
       </Box>
     );
@@ -150,7 +150,7 @@ const PaymentHistoryPage: React.FC = () => {
         Payment History
       </Typography>
       
-      <Box mb={3}>
+      <Box marginBottom={3}>
         <TextField
           fullWidth
           label="Search by Account ID, Payment ID or Reference"
@@ -185,7 +185,7 @@ const PaymentHistoryPage: React.FC = () => {
               {filteredPayments.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={7} align="center">
-                    <Typography variant="body1" sx={{ py: 3 }}>
+                    <Typography variant="body1" sx={{ paddingTop: 3, paddingBottom: 3 }}>
                       No payment records found
                     </Typography>
                   </TableCell>

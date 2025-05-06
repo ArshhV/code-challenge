@@ -35,7 +35,7 @@ function App() {
               </Box>
             </Toolbar>
           </AppBar>
-          <Container maxWidth="md" sx={{ mt: 4 }}>
+          <Container maxWidth="md" sx={{ marginTop: 4 }}>
             <Routes>
               <Route path="/" element={<AccountsPage />} />
               <Route path="/payment-history" element={<PaymentHistoryPage />} />
