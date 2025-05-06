@@ -63,11 +63,6 @@ const swaggerOptions = {
   apis: ['./src/api/controllers/*.ts']
 };
 
-const swaggerDocs = swaggerJsdoc(swaggerOptions);
-// Fix TypeScript error by using type assertions through unknown
-app.use('/api-docs', swaggerUi.serve as unknown as express.RequestHandler);
-app.use('/api-docs', swaggerUi.setup(swaggerDocs) as unknown as express.RequestHandler);
-
 // Routes
 app.use('/api/accounts', accountsRouter);
 app.use('/api/payments', paymentsRouter);
@@ -92,7 +87,6 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
-    console.log(`Swagger documentation available at http://localhost:${PORT}/api-docs`);
   });
 }
 
