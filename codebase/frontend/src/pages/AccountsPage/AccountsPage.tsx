@@ -4,9 +4,9 @@ import {
   InputLabel, CircularProgress, InputAdornment, SelectChangeEvent
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import AccountCard from '../components/AccountCard/AccountCard';
-import { api } from '../services/api';
-import { Account } from '../types';
+import AccountCard from '../../components/AccountCard/AccountCard';
+import { api } from '../../services/api';
+import { Account } from '../../types';
 
 const AccountsPage: React.FC = () => {
   const [accounts, setAccounts] = useState<Account[]>([]);

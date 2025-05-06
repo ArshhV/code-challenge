@@ -17,8 +17,8 @@ import {
   InputAdornment
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { Payment } from '../types';
-import { api } from '../services/api';
+import { Payment } from '../../types';
+import { api } from '../../services/api';
 
 const PaymentHistoryPage: React.FC = () => {
   // State for payment data
