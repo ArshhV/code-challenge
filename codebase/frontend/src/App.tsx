@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Container, Button, ThemeProvider, createTheme } from '@mui/material';
+import { AppBar, Toolbar, Container, Button, ThemeProvider, createTheme, Box } from '@mui/material';
 import AccountsPage from './pages/AccountsPage';
 import PaymentHistoryPage from './pages/PaymentHistoryPage';
 import './App.css';
@@ -24,15 +24,15 @@ function App() {
         <div className="App">
           <AppBar position="static">
             <Toolbar>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Energy Accounts Portal
-              </Typography>
-              <Button color="inherit" component={Link} to="/">
-                Accounts
-              </Button>
-              <Button color="inherit" component={Link} to="/payment-history">
-                Payment History
-              </Button>
+              <Box sx={{ flexGrow: 1 }}></Box>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Button color="inherit" component={Link} to="/">
+                  Accounts
+                </Button>
+                <Button color="inherit" component={Link} to="/payment-history">
+                  Payment History
+                </Button>
+              </Box>
             </Toolbar>
           </AppBar>
           <Container maxWidth="md" sx={{ mt: 4 }}>

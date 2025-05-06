@@ -5,7 +5,7 @@ import {
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import PaymentModal from '../PaymentModal/PaymentModal';
-import { Account, AccountType } from '../../types';
+import { Account } from '../../types';
 
 interface AccountCardProps {
   account: Account;
