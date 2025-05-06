@@ -1,0 +1,24 @@
+{
+  "name": "energy-accounts-app",
+  "version": "1.0.0",
+  "description": "Energy Accounts Application with React Frontend and Node.js Backend",
+  "private": true,
+  "workspaces": [
+    "codebase/frontend",
+    "codebase/backend"
+  ],
+  "scripts": {
+    "install-yarn": "npm install -g yarn",
+    "clean": "find . -name 'package-lock.json' -type f -delete",
+    "install-all": "yarn install && cd codebase/backend && yarn install && cd ../frontend && yarn install",
+    "build:backend": "cd codebase/backend && yarn build",
+    "start:frontend": "cd codebase/frontend && yarn start",
+    "start:backend": "cd codebase/backend && yarn start",
+    "dev:backend": "cd codebase/backend && yarn dev",
+    "start": "concurrently \"yarn dev:backend\" \"yarn start:frontend\"",
+    "test": "concurrently \"cd codebase/backend && yarn test\" \"cd codebase/frontend && yarn test\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

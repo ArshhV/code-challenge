@@ -1,5 +1,23 @@
+// Define interfaces for account types
+interface BaseAccount {
+  id: string;
+  type: "ELECTRICITY" | "GAS";
+  address: string;
+}
 
-const accounts: [] = [
+interface ElectricityAccount extends BaseAccount {
+  type: "ELECTRICITY";
+  meterNumber: string;
+}
+
+interface GasAccount extends BaseAccount {
+  type: "GAS";
+  volume: number;
+}
+
+type Account = ElectricityAccount | GasAccount;
+
+const accounts: Account[] = [
     {
         id: "A-0001",
         type: "ELECTRICITY",
@@ -56,7 +74,7 @@ const accounts: [] = [
     },
 ];
 
-export function MOCK_ENERGY_ACCOUNTS_API(): Promise<[]> {
+export function MOCK_ENERGY_ACCOUNTS_API(): Promise<Account[]> {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(accounts);

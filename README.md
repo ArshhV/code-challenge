@@ -2,6 +2,19 @@
 
 Build a React + Node.js application that renders a customer's energy accounts and allows a user to make a credit card payment.
 
+### 📋 Getting Started
+
+This project uses Yarn as the package manager and has a unified start command for both frontend and backend.
+
+To get started:
+
+1. Install Yarn if you don't have it already: `npm install -g yarn`
+2. Install dependencies: `yarn install-all`
+3. Start both frontend and backend concurrently: `yarn start`
+
+The backend will run on port 3001 with Swagger documentation available at http://localhost:3001/api-docs.
+The frontend will run on port 3000.
+
 ### 💡 Our guidance
 - You may choose whichever technology stack and libraries you are comfortable with.
 - This challenge covers both backend and frontend but **feel free to only focus on the area you are more comfortable with how we would obviously expect a more comprehensive solution if you only choose one avenue.**.
@@ -75,4 +88,4 @@ Add your code to the `codebase` folder.
 
 2 Options to submit your code:
 - Fork this repository and share the repository link with us.
-- Email a zipped copy of your code to Nina Ryu. 
+- Email a zipped copy of your code to Nina Ryu.
