@@ -16,7 +16,8 @@
     "start:backend": "cd codebase/backend && yarn start",
     "dev:backend": "cd codebase/backend && yarn dev",
     "start": "concurrently \"yarn dev:backend\" \"yarn start:frontend\"",
-    "test": "concurrently \"cd codebase/backend && yarn test\" \"cd codebase/frontend && yarn test\""
+    "test": "cd codebase/frontend && yarn test",
+    "test:all": "concurrently \"cd codebase/backend && yarn test\" \"cd codebase/frontend && yarn test\""
   },
   "devDependencies": {
     "concurrently": "^8.2.0"

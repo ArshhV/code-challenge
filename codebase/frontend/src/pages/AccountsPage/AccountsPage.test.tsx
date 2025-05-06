@@ -61,8 +61,12 @@ describe('AccountsPage', () => {
   beforeEach(() => {
     // Reset all mocks before each test
     jest.clearAllMocks();
-    // Mock the API response
-    mockedApi.getAccounts.mockResolvedValue(mockAccounts);
+    // Mock the API response with a slight delay
+    mockedApi.getAccounts.mockImplementation(() => {
+      return new Promise(resolve => setTimeout(() => {
+        resolve(mockAccounts);
+      }, 50));
+    });
   });
 
   test('renders loading state initially', () => {
@@ -72,66 +76,54 @@ describe('AccountsPage', () => {
 
   test('renders accounts after loading', async () => {
     render(<AccountsPage />);
-    
-    // Wait for loading to finish
-    await waitFor(() => {
-      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
-    });
+    // Wait for loading to finish and data to appear
+    expect(await screen.findByTestId('account-card-A-0001')).toBeInTheDocument();
     
     // Check if all accounts are rendered
     expect(screen.getByText('Energy Accounts')).toBeInTheDocument();
-    expect(screen.getByTestId('account-card-A-0001')).toBeInTheDocument();
     expect(screen.getByTestId('account-card-A-0002')).toBeInTheDocument();
     expect(screen.getByTestId('account-card-A-0003')).toBeInTheDocument();
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
   });
 
   test('filters accounts by energy type', async () => {
     render(<AccountsPage />);
+    await screen.findByTestId('account-card-A-0001'); // Wait for initial load
     
-    // Wait for loading to finish
-    await waitFor(() => {
-      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
-    });
-    
-    // Select Electricity filter - use the id instead of label text which has duplicates
     const filterElement = screen.getByLabelText(/Energy Type/i);
-    fireEvent.mouseDown(filterElement);
     
-    // Now click the menu item for Electricity
-    const electricityOption = screen.getByRole('option', { name: /Electricity/i });
+    // Select Electricity filter
+    fireEvent.mouseDown(filterElement);
+    const electricityOption = await screen.findByRole('option', { name: /Electricity/i });
     fireEvent.click(electricityOption);
     
     // Check that only electricity accounts are shown
-    expect(screen.getByTestId('account-card-A-0001')).toBeInTheDocument();
+    expect(await screen.findByTestId('account-card-A-0001')).toBeInTheDocument(); // ensure re-render complete
     expect(screen.getByTestId('account-card-A-0003')).toBeInTheDocument();
     expect(screen.queryByTestId('account-card-A-0002')).not.toBeInTheDocument();
     
     // Select Gas filter
     fireEvent.mouseDown(filterElement); 
-    const gasOption = screen.getByRole('option', { name: /Gas/i });
+    const gasOption = await screen.findByRole('option', { name: /Gas/i });
     fireEvent.click(gasOption);
     
     // Check that only gas accounts are shown
-    expect(screen.getByTestId('account-card-A-0002')).toBeInTheDocument();
+    expect(await screen.findByTestId('account-card-A-0002')).toBeInTheDocument(); // ensure re-render complete
     expect(screen.queryByTestId('account-card-A-0001')).not.toBeInTheDocument();
     expect(screen.queryByTestId('account-card-A-0003')).not.toBeInTheDocument();
   });
 
   test('filters accounts by address search', async () => {
     render(<AccountsPage />);
-    
-    // Wait for loading to finish
-    await waitFor(() => {
-      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
-    });
-    
+    await screen.findByTestId('account-card-A-0001'); // Wait for initial load
+        
     // Search for an address
     fireEvent.change(screen.getByLabelText('Search by Address'), { 
       target: { value: 'Oak' } 
     });
     
     // Check that only matching accounts are shown
-    expect(screen.getByTestId('account-card-A-0002')).toBeInTheDocument();
+    expect(await screen.findByTestId('account-card-A-0002')).toBeInTheDocument(); // ensure re-render complete
     expect(screen.queryByTestId('account-card-A-0001')).not.toBeInTheDocument();
     expect(screen.queryByTestId('account-card-A-0003')).not.toBeInTheDocument();
   });
@@ -140,30 +132,28 @@ describe('AccountsPage', () => {
     // Mock API failure
     mockedApi.getAccounts.mockRejectedValue(new Error('API Error'));
     
-    render(<AccountsPage />);
-    
-    // Wait for loading to finish and error to appear
-    await waitFor(() => {
-      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
-    });
+    // Suppress console.error for this test
+    const consoleErrorSpy = jest.spyOn(console, 'error');
+    consoleErrorSpy.mockImplementation(() => {}); // Mock to do nothing
 
-    expect(screen.getByText('Failed to fetch accounts. Please try again later.')).toBeInTheDocument();
+    render(<AccountsPage />);
+    expect(await screen.findByText('Failed to fetch accounts. Please try again later.')).toBeInTheDocument();
+    expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+
+    // Restore console.error
+    consoleErrorSpy.mockRestore();
   });
 
   test('displays message when no accounts match filters', async () => {
     render(<AccountsPage />);
-    
-    // Wait for loading to finish
-    await waitFor(() => {
-      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
-    });
-    
+    await screen.findByTestId('account-card-A-0001'); // Wait for initial load
+        
     // Search for an address that doesn't exist
     fireEvent.change(screen.getByLabelText('Search by Address'), { 
       target: { value: 'This address does not exist' } 
     });
     
     // Check that no accounts message is shown
-    expect(screen.getByText('No accounts found matching your filters.')).toBeInTheDocument();
+    expect(await screen.findByText('No accounts found matching your filters.')).toBeInTheDocument();
   });
 });
