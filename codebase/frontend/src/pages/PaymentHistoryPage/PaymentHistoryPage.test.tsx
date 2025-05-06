@@ -1,7 +1,7 @@
 import React from 'react';
-import { render, screen, waitFor, fireEvent, within } from '@testing-library/react'; // Removed act
+import { render, screen, waitFor, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import PaymentHistoryPage from './PaymentHistoryPage'; // Added missing import
+import PaymentHistoryPage from './PaymentHistoryPage';
 import { api } from '../../services/api';
 import { Payment } from '../../types';
 
@@ -90,12 +90,11 @@ describe('PaymentHistoryPage', () => {
     
     expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
     // Check API calls after data is loaded and assertions pass
-    await waitFor(() => { // Wait for all async calls to settle if necessary
-        expect(mockedApi.getPaymentHistory).toHaveBeenCalledWith('A-0001');
-        expect(mockedApi.getPaymentHistory).toHaveBeenCalledWith('A-0004');
-        expect(mockedApi.getPaymentHistory).toHaveBeenCalledWith('A-0008');
-        expect(mockedApi.getPaymentHistory).toHaveBeenCalledTimes(3); // Ensure it's called for all expected accounts
-    });
+    // The findByText above ensures that loading has completed and API calls should have been made.
+    expect(mockedApi.getPaymentHistory).toHaveBeenCalledWith('A-0001');
+    expect(mockedApi.getPaymentHistory).toHaveBeenCalledWith('A-0004');
+    expect(mockedApi.getPaymentHistory).toHaveBeenCalledWith('A-0008');
+    expect(mockedApi.getPaymentHistory).toHaveBeenCalledTimes(3); // Ensure it's called for all expected accounts
   });
 
   test('searches payments by account ID', async () => {
@@ -109,13 +108,11 @@ describe('PaymentHistoryPage', () => {
     // Wait for the table to update with filtered results for A-0004, which has P-0002
     expect(await screen.findByText('P-0002')).toBeInTheDocument();
     const table = screen.getByRole('table', { name: /payment history table/i });
-    // Use waitFor for assertions on content that updates due to filter
-    await waitFor(() => {
-      const rows = within(table).getAllByRole('row');
-      expect(rows.length).toBe(2); // Header + 1 data row for P-0002
-      const dataRow = rows[1];
-      expect(within(dataRow).getByText('A-0004')).toBeInTheDocument();
-    });
+    // Assertions on content that updates due to filter
+    const rows = within(table).getAllByRole('row');
+    expect(rows.length).toBe(2); // Header + 1 data row for P-0002
+    const dataRow = rows[1];
+    expect(within(dataRow).getByText('A-0004')).toBeInTheDocument();
   });
 
   test('searches payments by payment ID', async () => {
@@ -128,10 +125,8 @@ describe('PaymentHistoryPage', () => {
     
     expect(await screen.findByText('P-0003')).toBeInTheDocument(); // Main assertion for the search
     const table = screen.getByRole('table', { name: /payment history table/i });
-    await waitFor(() => {
-      const rows = within(table).getAllByRole('row');
-      expect(rows.length).toBe(2);
-    });
+    const rows = within(table).getAllByRole('row');
+    expect(rows.length).toBe(2);
   });
 
   test('searches payments by reference', async () => {
@@ -144,11 +139,10 @@ describe('PaymentHistoryPage', () => {
     
     expect(await screen.findByText('REF654321')).toBeInTheDocument();
     const table = screen.getByRole('table', { name: /payment history table/i });
-    await waitFor(() => {
-      const rows = within(table).getAllByRole('row');
-      expect(rows.length).toBe(2); // Header + 1 data row for P-0002
-      expect(within(rows[1]).getByText('P-0002')).toBeInTheDocument();
-    });
+    // Assertions on content that updates due to filter
+    const rows = within(table).getAllByRole('row');
+    expect(rows.length).toBe(2); // Header + 1 data row for P-0002
+    expect(within(rows[1]).getByText('P-0002')).toBeInTheDocument();
   });
 
   test('displays error message when API call fails', async () => {
