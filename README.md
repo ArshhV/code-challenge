@@ -16,3 +16,13 @@ This project was developed as part of a frontend role application. The primary f
 
 - **Frontend Tests**: All frontend tests can be run using `yarn test`.
 - **Backend**: The backend was created using AI tools to supplement the frontend development and provide a functional API.
+
+---
+
+### 👨‍💻 About the Developer
+
+Hi, I'm Arshh Vinayak, a frontend engineer with extensive experience building scalable web applications and user interfaces. With a background in frontend development at companies like Bupa and Deloitte Digital, I specialize in React, TypeScript, and component-driven architecture.
+
+My approach combines technical expertise with a focus on user experience and code quality. I'm passionate about creating maintainable codebases and intuitive interfaces that solve real business problems.
+
+Let's connect! I'm looking forward to the opportunity to discuss this project and explore how my skills could benefit your team.
