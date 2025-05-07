@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Box, Typography, TextField, Select, MenuItem, FormControl, 
-  InputLabel, CircularProgress, InputAdornment, SelectChangeEvent
+  InputLabel, CircularProgress, SelectChangeEvent
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 import AccountCard from '../../components/AccountCard/AccountCard';
 import { api } from '../../services/api';
 import { Account } from '../../types';
@@ -90,13 +89,6 @@ const AccountsPage: React.FC = () => {
           fullWidth
           value={searchQuery}
           onChange={handleSearchChange}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
         />
         
         <FormControl variant="outlined" style={{ minWidth: 200 }}>
