@@ -110,7 +110,7 @@ const AccountsPage: React.FC = () => {
       {filteredAccounts.length === 0 ? (
         <Typography align="center">No accounts found matching your filters.</Typography>
       ) : (
-        <Box sx={{ maxWidth: "600px", mx: "auto" }}>
+        <Box sx={{ maxWidth: "600px", marginLeft: "auto", marginRight: "auto" }}>
           {filteredAccounts.map(account => (
             <Box key={account.id} marginBottom={3}>
               <AccountCard account={account} />

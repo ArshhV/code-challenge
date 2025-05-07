@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import PaymentHistoryPage from './PaymentHistoryPage';
 import { api } from '../../services/api';
@@ -69,7 +69,7 @@ describe('PaymentHistoryPage', () => {
         
     // Check if page title is rendered
     expect(screen.getByText('Payment History')).toBeInTheDocument();
-    const table = screen.getByRole('table', { name: /payment history table/i });
+    const table = screen.getByRole('table', { name: 'payment history table' });
     const tableHeaders = within(table).getAllByRole('columnheader');
     expect(tableHeaders[0]).toHaveTextContent('Date');
     expect(tableHeaders[1]).toHaveTextContent('Account ID');
@@ -107,7 +107,7 @@ describe('PaymentHistoryPage', () => {
     
     // Wait for the table to update with filtered results for A-0004, which has P-0002
     expect(await screen.findByText('P-0002')).toBeInTheDocument();
-    const table = screen.getByRole('table', { name: /payment history table/i });
+    const table = screen.getByRole('table', { name: 'payment history table' });
     // Assertions on content that updates due to filter
     const rows = within(table).getAllByRole('row');
     expect(rows.length).toBe(2); // Header + 1 data row for P-0002
@@ -124,7 +124,7 @@ describe('PaymentHistoryPage', () => {
     });
     
     expect(await screen.findByText('P-0003')).toBeInTheDocument(); // Main assertion for the search
-    const table = screen.getByRole('table', { name: /payment history table/i });
+    const table = screen.getByRole('table', { name: 'payment history table' });
     const rows = within(table).getAllByRole('row');
     expect(rows.length).toBe(2);
   });
@@ -138,7 +138,7 @@ describe('PaymentHistoryPage', () => {
     });
     
     expect(await screen.findByText('REF654321')).toBeInTheDocument();
-    const table = screen.getByRole('table', { name: /payment history table/i });
+    const table = screen.getByRole('table', { name: 'payment history table' });
     // Assertions on content that updates due to filter
     const rows = within(table).getAllByRole('row');
     expect(rows.length).toBe(2); // Header + 1 data row for P-0002
