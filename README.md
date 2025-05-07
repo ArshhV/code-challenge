@@ -5,8 +5,7 @@ This project uses Yarn as the package manager and has a unified start command fo
 To get started:
 
 1. Install Yarn if you don't have it already: `npm install -g yarn`
-2. Install dependencies: `yarn install-all`
-3. Start both frontend and backend concurrently: `yarn start`
+2. Install dependencies and start both frontend and backend: `yarn start`
 
 The backend will run on port 3001.
 The frontend will run on port 3000.

@@ -15,7 +15,7 @@
     "start:frontend": "cd codebase/frontend && yarn start",
     "start:backend": "cd codebase/backend && yarn start",
     "dev:backend": "cd codebase/backend && yarn dev",
-    "start": "concurrently \"yarn dev:backend\" \"yarn start:frontend\"",
+    "start": "yarn install-all && cd codebase/backend && yarn dev & cd codebase/frontend && yarn start",
     "test": "cd codebase/frontend && yarn test",
     "test:all": "concurrently \"cd codebase/backend && yarn test\" \"cd codebase/frontend && yarn test\""
   },

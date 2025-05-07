@@ -92,6 +92,10 @@ describe('AccountCard Component', () => {
     await waitFor(() => {
       expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
     });
+    
+    // Check that the balance is displayed with the correct color (green for positive)
+    const balanceElement = screen.getByText('$100.00');
+    expect(balanceElement).toHaveStyle({ color: 'rgb(46, 125, 50)' }); // success.main in RGB
   });
 
   it('applies correct color to negative balance', async () => {
@@ -106,6 +110,10 @@ describe('AccountCard Component', () => {
     await waitFor(() => {
       expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
     });
+    
+    // Check that the balance is displayed with the correct color (red for negative)
+    const balanceElement = screen.getByText('$-50.00');
+    expect(balanceElement).toHaveStyle({ color: 'rgb(211, 47, 47)' }); // error.main in RGB
   });
 
   it('applies correct color to zero balance', async () => {
@@ -120,6 +128,10 @@ describe('AccountCard Component', () => {
     await waitFor(() => {
       expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
     });
+    
+    // Check that the balance is displayed with the correct color (grey for zero)
+    const balanceElement = screen.getByText('$0.00');
+    expect(balanceElement).toHaveStyle({ color: 'rgba(0, 0, 0, 0.6)' }); // text.secondary in RGBA
   });
 
   it('allows making a payment after loading completes', async () => {
@@ -130,7 +142,7 @@ describe('AccountCard Component', () => {
       expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
     });
     
-    const paymentButton = screen.getByRole('button', { name: /make a payment/i });
+    const paymentButton = screen.getByRole('button', { name: "Make a Payment" });
     expect(paymentButton).toBeEnabled();
   });
 
@@ -201,7 +213,7 @@ describe('AccountCard Component', () => {
     });
     
     // Submit the payment
-    const submitButton = screen.getByRole('button', { name: /pay/i });
+    const submitButton = screen.getByRole('button', { name: "Pay $100.00" });
     fireEvent.click(submitButton);
     
     // After a successful submission, we need to wait for the success message
@@ -212,15 +224,9 @@ describe('AccountCard Component', () => {
     // Verify the API was called
     expect(api.makePayment).toHaveBeenCalled();
     
-    // Click the Close button (the full-width button at the bottom, not the X icon)
-    const closeButtons = screen.getAllByRole('button', { name: /close/i });
-    const fullWidthCloseButton = closeButtons.find(button => 
-      button.classList.contains('MuiButton-fullWidth')
-    );
-    
-    if (fullWidthCloseButton) {
-      fireEvent.click(fullWidthCloseButton);
-    }
+    // Click the Close button (the full-width button at the bottom)
+    const closeButton = screen.getByText("Close");
+    fireEvent.click(closeButton);
     
     // Now verify that the dialog has closed
     await waitFor(() => {

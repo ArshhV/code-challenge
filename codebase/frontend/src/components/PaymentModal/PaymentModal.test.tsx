@@ -99,11 +99,11 @@ describe('PaymentModal Component', () => {
     fireEvent.click(payButton);
     
     // Check for validation errors
-    await screen.findByText(/Amount must be greater than 0/i);
-    await screen.findByText(/Card number is required/i);
-    await screen.findByText(/Cardholder name is required/i);
-    await screen.findByText(/Expiry date is required/i);
-    await screen.findByText(/CVV is required/i);
+    await screen.findByText("Amount must be greater than 0");
+    await screen.findByText("Card number is required");
+    await screen.findByText("Cardholder name is required");
+    await screen.findByText("Expiry date is required");
+    await screen.findByText("CVV is required");
     
     // API should not be called
     expect(api.makePayment).not.toHaveBeenCalled();
@@ -264,7 +264,7 @@ describe('PaymentModal Component', () => {
     
     // Check for validation error
     await waitFor(() => {
-      expect(screen.getByText(/Invalid format \(use MM\/YY\)/i)).toBeInTheDocument();
+      expect(screen.getByText("Invalid format (use MM/YY)")).toBeInTheDocument();
     });
   });
 
@@ -314,7 +314,7 @@ describe('PaymentModal Component', () => {
     
     // Check for expired card error
     await waitFor(() => {
-      expect(screen.getByText(/Card has expired/i)).toBeInTheDocument();
+      expect(screen.getByText("Card has expired")).toBeInTheDocument();
     });
 
     // Restore original Date implementation
@@ -354,7 +354,7 @@ describe('PaymentModal Component', () => {
     
     // Check for invalid card format error
     await waitFor(() => {
-      expect(screen.getByText(/Invalid card number format/i)).toBeInTheDocument();
+      expect(screen.getByText("Invalid card number format")).toBeInTheDocument();
     });
   });
 
@@ -374,7 +374,7 @@ describe('PaymentModal Component', () => {
     
     // Verify error appears
     await waitFor(() => {
-      expect(screen.getByText(/Card number is required/i)).toBeInTheDocument();
+      expect(screen.getByText("Card number is required")).toBeInTheDocument();
     });
     
     // Type in the field with error
@@ -384,7 +384,7 @@ describe('PaymentModal Component', () => {
     
     // Error should be cleared
     await waitFor(() => {
-      expect(screen.queryByText(/Card number is required/i)).not.toBeInTheDocument();
+      expect(screen.queryByText("Card number is required")).not.toBeInTheDocument();
     });
   });
 
@@ -413,11 +413,8 @@ describe('PaymentModal Component', () => {
     // Wait for success view to appear
     await screen.findByText('Payment Successful');
     
-    // Use getAllByText to get all buttons with text "Close" and select the one that doesn't have aria-label="close"
-    const closeButtons = screen.getAllByText('Close');
-    // Find the button that is the main close button, not the X icon (which has no text content)
-    const mainCloseButton = closeButtons[0];
-    fireEvent.click(mainCloseButton);
+    const closeButton = screen.getByText('Close');
+    fireEvent.click(closeButton);
     
     // Check if onClose was called
     expect(mockOnClose).toHaveBeenCalledTimes(1);
