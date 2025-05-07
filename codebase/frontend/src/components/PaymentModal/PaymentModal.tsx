@@ -23,11 +23,12 @@ interface PaymentModalProps {
   open: boolean;
   onClose: () => void;
   account: Account;
+  balance: number;
 }
 
-const PaymentModal: React.FC<PaymentModalProps> = ({ open, onClose, account }) => {
+const PaymentModal: React.FC<PaymentModalProps> = ({ open, onClose, account, balance }) => {
   // Payment state
-  const [amount, setAmount] = useState<number>(account?.balance || 0);
+  const [amount, setAmount] = useState<number>(balance);
   const [cardDetails, setCardDetails] = useState<CreditCardDetails>({
     cardNumber: '',
     cardholderName: '',
@@ -47,7 +48,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ open, onClose, account }) =
   // Reset state when modal opens with new account
   useEffect(() => {
     if (open && account) {
-      setAmount(account.balance || 0);
+      setAmount(balance);
       setCardDetails({
         cardNumber: '',
         cardholderName: '',
@@ -59,7 +60,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ open, onClose, account }) =
       setErrors({});
       setApiError(null);
     }
-  }, [open, account]);
+  }, [open, account, balance]);
 
   // Handle input changes
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -246,7 +247,7 @@ const PaymentModal: React.FC<PaymentModalProps> = ({ open, onClose, account }) =
                 Account: {account?.id}
               </Typography>
               <Typography variant="subtitle1" gutterBottom>
-                Balance: ${(account?.balance || 0).toFixed(2)}
+                Balance: ${balance.toFixed(2)}
               </Typography>
             </Paper>
             

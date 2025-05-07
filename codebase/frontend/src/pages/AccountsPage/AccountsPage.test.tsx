@@ -27,34 +27,19 @@ describe('AccountsPage', () => {
       id: 'A-0001',
       type: 'ELECTRICITY',
       address: '123 Main St',
-      balance: 150.75,
       meterNumber: 'E-12345',
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      phoneNumber: '555-123-4567'
     },
     {
       id: 'A-0002',
       type: 'GAS',
       address: '456 Oak Ave',
-      balance: 85.20,
-      meterNumber: 'G-67890',
-      firstName: 'Jane',
-      lastName: 'Smith',
-      email: 'jane.smith@example.com',
-      phoneNumber: '555-987-6543'
+      volume: 2500,
     },
     {
       id: 'A-0003',
       type: 'ELECTRICITY',
       address: '789 Pine Blvd',
-      balance: 210.30,
       meterNumber: 'E-54321',
-      firstName: 'Bob',
-      lastName: 'Johnson',
-      email: 'bob.johnson@example.com',
-      phoneNumber: '555-456-7890'
     }
   ];
 

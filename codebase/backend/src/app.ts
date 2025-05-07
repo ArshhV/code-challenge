@@ -86,7 +86,7 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
 // Only start the server if this file is run directly
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    console.log(`Backend server running on port ${PORT}`);
   });
 }
 

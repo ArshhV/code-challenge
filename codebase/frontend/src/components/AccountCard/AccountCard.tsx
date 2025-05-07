@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
-  Card, CardContent, Typography, Button, Box, Chip, Divider
+  Card, CardContent, Typography, Button, Box, Chip, Divider, CircularProgress
 } from '@mui/material';
 import ElectricBoltIcon from '@mui/icons-material/ElectricBolt';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import PaymentModal from '../PaymentModal/PaymentModal';
 import { Account } from '../../types';
+import { api } from '../../services/api';
 
 interface AccountCardProps {
   account: Account;
@@ -13,6 +14,36 @@ interface AccountCardProps {
 
 const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [balance, setBalance] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchDueCharges = useCallback(async () => {
+    try {
+      setLoading(true);
+      const charges = await api.getDueCharges(account.id);
+      
+      // Calculate balance from due charges
+      if (charges && Array.isArray(charges)) {
+        const totalBalance = charges.reduce((sum, charge) => sum + charge.amount, 0);
+        setBalance(totalBalance);
+      } else {
+        // Handle case where charges is not an array or is undefined
+        setBalance(0);
+      }
+    } catch (error) {
+      // Use a more specific error message
+      if (process.env.NODE_ENV !== 'test') {
+        console.error('Error fetching due charges:', error);
+      }
+      setBalance(0);
+    } finally {
+      setLoading(false);
+    }
+  }, [account.id]);
+
+  useEffect(() => {
+    fetchDueCharges();
+  }, [fetchDueCharges]);
 
   const getBalanceColor = (balance: number) => {
     if (balance > 0) return 'success.main';  // Green
@@ -50,9 +81,7 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
               ID: {account.id}
             </Typography>
           </Box>
-          <Typography variant="h6" component="div" marginBottom={1} align="center">
-            {account.firstName} {account.lastName}
-          </Typography>
+          
           <Typography color="text.secondary" marginBottom={2} align="center">
             {account.address}
           </Typography>
@@ -64,14 +93,18 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
           <Typography variant="subtitle1" component="div">
             Balance:
           </Typography>
-          <Typography 
-            variant="h6" 
-            component="div" 
-            color={getBalanceColor(account.balance || 0)}
-            sx={{ marginLeft: 1, fontWeight: 'bold' }}
-          >
-            ${(account.balance || 0).toFixed(2)}
-          </Typography>
+          {loading ? (
+            <CircularProgress size={20} sx={{ ml: 1 }} />
+          ) : (
+            <Typography 
+              variant="h6" 
+              component="div" 
+              color={getBalanceColor(balance)}
+              sx={{ marginLeft: 1, fontWeight: 'bold' }}
+            >
+              ${balance.toFixed(2)}
+            </Typography>
+          )}
         </Box>
         
         <Box display="flex" justifyContent="center">
@@ -80,6 +113,7 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
             color="primary" 
             onClick={handleOpenPaymentModal}
             fullWidth
+            disabled={loading}
           >
             Make a Payment
           </Button>
@@ -89,7 +123,8 @@ const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
       <PaymentModal 
         open={isPaymentModalOpen} 
         onClose={handleClosePaymentModal} 
-        account={account} 
+        account={account}
+        balance={balance}
       />
     </Card>
   );

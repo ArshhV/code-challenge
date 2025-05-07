@@ -17,7 +17,7 @@ export class PaymentService {
       // In a real application, this would call an API or database
       const allDueCharges = await getDueCharges();
       const accountDueCharges = allDueCharges.filter(
-        charge => charge.accountId === accountId && charge.paid !== true
+        charge => charge.accountId === accountId
       );
       return accountDueCharges;
     } catch (error) {

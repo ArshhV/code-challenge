@@ -1,27 +1,32 @@
 export type AccountType = 'ELECTRICITY' | 'GAS';
 
-export interface Account {
+// Base interface shared by both account types
+export interface BaseAccount {
   id: string;
   type: AccountType;
   address: string;
-  meterNumber?: string;
-  volume?: number;
-  balance: number;
-  accountNumber?: string;
-  firstName?: string;
-  lastName?: string;
-  email?: string;
-  phoneNumber?: string;
 }
+
+// ElectricityAccount has required meterNumber
+export interface ElectricityAccount extends BaseAccount {
+  type: 'ELECTRICITY';
+  meterNumber: string;
+}
+
+// GasAccount has required volume
+export interface GasAccount extends BaseAccount {
+  type: 'GAS';
+  volume: number;
+}
+
+// Account is a union type of ElectricityAccount and GasAccount
+export type Account = ElectricityAccount | GasAccount;
 
 export interface DueCharge {
   id: string;
   accountId: string;
   amount: number;
-  date: string;  // Changed from dueDate to match the mock implementation
-  dueDate?: string; // Keep as optional for backward compatibility
-  description?: string; // Optional since it's not in the mock
-  paid?: boolean; // Optional since it's not in the mock
+  date: string;
 }
 
 export interface CreditCardDetails {

@@ -46,7 +46,7 @@ export async function getAccountsWithBalances(): Promise<Account[]> {
     ]) as [Account[], DueCharge[]];
 
     // Calculate balance for each account
-    return accounts.map(account => {
+    return accounts.map((account: Account) => {
       const accountCharges = dueCharges.filter(charge => charge.accountId === account.id);
       const balance = accountCharges.reduce((sum, charge) => sum + charge.amount, 0);
       

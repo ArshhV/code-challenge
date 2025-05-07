@@ -17,14 +17,12 @@ describe('PaymentModal Component', () => {
     id: 'A-1234',
     type: 'ELECTRICITY',
     address: '123 Main St, Anytown, USA',
-    balance: 150.5,
-    firstName: 'John',
-    lastName: 'Doe',
-    accountNumber: 'ACC12345',
-    email: 'john.doe@example.com',
-    phoneNumber: '555-123-4567'
+    meterNumber: 'MET12345'
   };
 
+  // Fixed balance value to use in tests
+  const mockBalance = 150.5;
+  
   const mockOnClose = jest.fn();
 
   beforeEach(() => {
@@ -36,20 +34,21 @@ describe('PaymentModal Component', () => {
       <PaymentModal 
         open={true} 
         onClose={mockOnClose} 
-        account={mockAccount} 
+        account={mockAccount}
+        balance={mockBalance}
       />
     );
     
     // Check for form elements
     expect(screen.getByText('Make a Payment')).toBeInTheDocument();
     expect(screen.getByText(`Account: ${mockAccount.id}`)).toBeInTheDocument();
-    expect(screen.getByText(`Balance: $${mockAccount.balance.toFixed(2)}`)).toBeInTheDocument();
+    expect(screen.getByText(`Balance: $${mockBalance.toFixed(2)}`)).toBeInTheDocument();
     expect(screen.getByLabelText("Payment Amount")).toBeInTheDocument();
     expect(screen.getByLabelText("Card Number")).toBeInTheDocument();
     expect(screen.getByLabelText("Cardholder Name")).toBeInTheDocument();
     expect(screen.getByLabelText("Expiry Date")).toBeInTheDocument();
     expect(screen.getByLabelText("CVV")).toBeInTheDocument();
-    expect(screen.getByText(`Pay $${mockAccount.balance.toFixed(2)}`)).toBeInTheDocument();
+    expect(screen.getByText(`Pay $${mockBalance.toFixed(2)}`)).toBeInTheDocument();
   });
 
   it('does not render when closed', () => {
@@ -57,7 +56,8 @@ describe('PaymentModal Component', () => {
       <PaymentModal 
         open={false} 
         onClose={mockOnClose} 
-        account={mockAccount} 
+        account={mockAccount}
+        balance={mockBalance}
       />
     );
     
@@ -69,7 +69,8 @@ describe('PaymentModal Component', () => {
       <PaymentModal 
         open={true} 
         onClose={mockOnClose} 
-        account={mockAccount} 
+        account={mockAccount}
+        balance={mockBalance}
       />
     );
     
@@ -84,7 +85,8 @@ describe('PaymentModal Component', () => {
       <PaymentModal 
         open={true} 
         onClose={mockOnClose} 
-        account={mockAccount} 
+        account={mockAccount}
+        balance={mockBalance}
       />
     );
     
@@ -111,7 +113,7 @@ describe('PaymentModal Component', () => {
     (api.makePayment as jest.Mock).mockResolvedValueOnce({
       id: 'payment_123',
       accountId: mockAccount.id,
-      amount: mockAccount.balance,
+      amount: mockBalance,
       date: new Date().toISOString(),
       method: 'CARD',
       status: 'COMPLETED',
@@ -126,7 +128,8 @@ describe('PaymentModal Component', () => {
       <PaymentModal 
         open={true} 
         onClose={mockOnClose} 
-        account={mockAccount} 
+        account={mockAccount}
+        balance={mockBalance}
       />
     );
     
@@ -148,13 +151,13 @@ describe('PaymentModal Component', () => {
     });
     
     // Submit the form
-    const payButton = screen.getByText(`Pay $${mockAccount.balance.toFixed(2)}`);
+    const payButton = screen.getByText(`Pay $${mockBalance.toFixed(2)}`);
     fireEvent.click(payButton);
     
     // Check API called with correct parameters
     expect(api.makePayment).toHaveBeenCalledWith(
       mockAccount.id,
-      mockAccount.balance,
+      mockBalance,
       {
         cardNumber: '4111111111111111',
         cardholderName: 'John Doe',
@@ -165,7 +168,7 @@ describe('PaymentModal Component', () => {
     
     // Check success view appears
     await screen.findByText('Payment Successful');
-    await screen.findByText(`Your payment of $${mockAccount.balance.toFixed(2)} has been processed successfully.`);
+    await screen.findByText(`Your payment of $${mockBalance.toFixed(2)} has been processed successfully.`);
   });
 
   it('handles payment failure gracefully', async () => {
@@ -177,7 +180,8 @@ describe('PaymentModal Component', () => {
       <PaymentModal 
         open={true} 
         onClose={mockOnClose} 
-        account={mockAccount} 
+        account={mockAccount}
+        balance={mockBalance}
       />
     );
     
@@ -199,7 +203,7 @@ describe('PaymentModal Component', () => {
     });
     
     // Submit the form
-    const payButton = screen.getByText(`Pay $${mockAccount.balance.toFixed(2)}`);
+    const payButton = screen.getByText(`Pay $${mockBalance.toFixed(2)}`);
     fireEvent.click(payButton);
     
     // Check error message appears
@@ -214,7 +218,8 @@ describe('PaymentModal Component', () => {
       <PaymentModal 
         open={true} 
         onClose={mockOnClose} 
-        account={mockAccount} 
+        account={mockAccount}
+        balance={mockBalance}
       />
     );
     
@@ -230,7 +235,8 @@ describe('PaymentModal Component', () => {
       <PaymentModal 
         open={true} 
         onClose={mockOnClose} 
-        account={mockAccount} 
+        account={mockAccount}
+        balance={mockBalance}
       />
     );
     
@@ -253,7 +259,7 @@ describe('PaymentModal Component', () => {
     });
     
     // Submit the form
-    const payButton = screen.getByText(`Pay $${mockAccount.balance.toFixed(2)}`);
+    const payButton = screen.getByText(`Pay $${mockBalance.toFixed(2)}`);
     fireEvent.click(payButton);
     
     // Check for validation error
@@ -279,7 +285,8 @@ describe('PaymentModal Component', () => {
       <PaymentModal 
         open={true} 
         onClose={mockOnClose} 
-        account={mockAccount} 
+        account={mockAccount}
+        balance={mockBalance}
       />
     );
     
@@ -302,7 +309,7 @@ describe('PaymentModal Component', () => {
     });
     
     // Submit the form
-    const payButton = screen.getByText(`Pay $${mockAccount.balance.toFixed(2)}`);
+    const payButton = screen.getByText(`Pay $${mockBalance.toFixed(2)}`);
     fireEvent.click(payButton);
     
     // Check for expired card error
@@ -319,7 +326,8 @@ describe('PaymentModal Component', () => {
       <PaymentModal 
         open={true} 
         onClose={mockOnClose} 
-        account={mockAccount} 
+        account={mockAccount}
+        balance={mockBalance}
       />
     );
     
@@ -341,7 +349,7 @@ describe('PaymentModal Component', () => {
     });
     
     // Submit the form
-    const payButton = screen.getByText(`Pay $${mockAccount.balance.toFixed(2)}`);
+    const payButton = screen.getByText(`Pay $${mockBalance.toFixed(2)}`);
     fireEvent.click(payButton);
     
     // Check for invalid card format error
@@ -355,12 +363,13 @@ describe('PaymentModal Component', () => {
       <PaymentModal 
         open={true} 
         onClose={mockOnClose} 
-        account={mockAccount} 
+        account={mockAccount}
+        balance={mockBalance}
       />
     );
     
     // Trigger validation errors
-    const payButton = screen.getByText(`Pay $${mockAccount.balance.toFixed(2)}`);
+    const payButton = screen.getByText(`Pay $${mockBalance.toFixed(2)}`);
     fireEvent.click(payButton);
     
     // Verify error appears
@@ -387,7 +396,8 @@ describe('PaymentModal Component', () => {
       <PaymentModal 
         open={true} 
         onClose={mockOnClose} 
-        account={mockAccount} 
+        account={mockAccount}
+        balance={mockBalance}
       />
     );
     
@@ -397,7 +407,7 @@ describe('PaymentModal Component', () => {
     fireEvent.change(screen.getByLabelText("Expiry Date"), { target: { value: '12/30' } });
     fireEvent.change(screen.getByLabelText("CVV"), { target: { value: '123' } });
     
-    const payButton = screen.getByText(`Pay $${mockAccount.balance.toFixed(2)}`);
+    const payButton = screen.getByText(`Pay $${mockBalance.toFixed(2)}`);
     fireEvent.click(payButton);
     
     // Wait for success view to appear
@@ -418,7 +428,8 @@ describe('PaymentModal Component', () => {
       <PaymentModal 
         open={true} 
         onClose={mockOnClose} 
-        account={mockAccount} 
+        account={mockAccount}
+        balance={mockBalance}
       />
     );
     
@@ -434,7 +445,8 @@ describe('PaymentModal Component', () => {
       <PaymentModal 
         open={true} 
         onClose={mockOnClose} 
-        account={mockAccount} 
+        account={mockAccount}
+        balance={mockBalance}
       />
     );
     
@@ -446,14 +458,21 @@ describe('PaymentModal Component', () => {
     expect(screen.getByText('Pay $50.00')).toBeInTheDocument();
     
     // New account with different balance
-    const newAccount = { ...mockAccount, id: 'A-5678', balance: 200 };
+    const newBalance = 200;
+    const newAccount: Account = { 
+      id: 'A-5678', 
+      type: 'GAS' as const, 
+      address: '456 Oak Ave',
+      volume: 2500
+    };
     
     // Close and reopen with new account
     rerender(
       <PaymentModal 
         open={false} 
         onClose={mockOnClose} 
-        account={mockAccount} 
+        account={mockAccount}
+        balance={mockBalance}
       />
     );
     
@@ -461,12 +480,13 @@ describe('PaymentModal Component', () => {
       <PaymentModal 
         open={true} 
         onClose={mockOnClose} 
-        account={newAccount} 
+        account={newAccount}
+        balance={newBalance}
       />
     );
     
     // Check if amount was reset to new account's balance
-    expect(screen.getByText(`Pay $${newAccount.balance.toFixed(2)}`)).toBeInTheDocument();
+    expect(screen.getByText(`Pay $${newBalance.toFixed(2)}`)).toBeInTheDocument();
     expect(screen.getByText(`Account: ${newAccount.id}`)).toBeInTheDocument();
   });
 });
