@@ -26,3 +26,6 @@ Hi, I'm Arshh Vinayak, a frontend engineer with extensive experience building sc
 My approach combines technical expertise with a focus on user experience and code quality. I'm passionate about creating maintainable codebases and intuitive interfaces that solve real business problems.
 
 Let's connect! I'm looking forward to the opportunity to discuss this project and explore how my skills could benefit your team.
+
+<br>
+<img alt="Coder GIF" height=250 width=350 src="https://physicsgurukul.files.wordpress.com/2019/02/character-1.gif" />
